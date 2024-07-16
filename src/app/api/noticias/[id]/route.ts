@@ -9,9 +9,16 @@ const dbConfig = {
   database: "uesevipr_uesevi",
 };
 
-// Función GET para realizar una consulta
-export async function GET(req: any, context: any) {
+// Función para habilitar CORS
+function enableCors(response) {
+  response.headers.set("Access-Control-Allow-Origin", "*"); // Permite todas las solicitudes
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return response;
+}
 
+// Función GET para realizar una consulta
+export async function GET(req, context) {
   const { params } = context;
   try {
     // Crear una conexión a la base de datos
@@ -26,14 +33,22 @@ export async function GET(req: any, context: any) {
     // Cerrar la conexión
     await connection.end();
 
-    // Devolver los resultados en formato JSON
-    return NextResponse.json(rows);
+    // Devolver los resultados en formato JSON con CORS habilitado
+    let response = NextResponse.json(rows);
+    return enableCors(response);
   } catch (error) {
     // Manejo de errores
     console.error("Error al realizar la consulta:", error);
-    return NextResponse.json(
+    let response = NextResponse.json(
       { error: "Error al realizar la consulta" },
       { status: 500 }
     );
+    return enableCors(response);
   }
+}
+
+// Función OPTIONS para manejar preflight requests
+export function OPTIONS(req) {
+  let response = new NextResponse();
+  return enableCors(response);
 }
