@@ -10,7 +10,7 @@ const dbConfig = {
 };
 
 // Función para habilitar CORS
-function enableCors(response) {
+function enableCors(response: NextResponse) {
   response.headers.set("Access-Control-Allow-Origin", "*"); // Permite todas las solicitudes
   response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -18,7 +18,7 @@ function enableCors(response) {
 }
 
 // Función GET para realizar una consulta
-export async function GET(req, context) {
+export async function GET(req: any, context: any) {
   const { params } = context;
   try {
     // Crear una conexión a la base de datos
@@ -48,7 +48,7 @@ export async function GET(req, context) {
 }
 
 // Función OPTIONS para manejar preflight requests
-export function OPTIONS(req) {
+export function OPTIONS(req: any) {
   let response = new NextResponse();
   return enableCors(response);
 }
